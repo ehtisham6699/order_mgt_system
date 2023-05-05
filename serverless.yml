@@ -1,4 +1,4 @@
-service: order_mgt_system
+service: order-system
 
 provider:
   name: aws
