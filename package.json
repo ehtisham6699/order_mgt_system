@@ -1,0 +1,23 @@
+{
+  "name": "order_mgt_system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehtisham6699/order_mgt_system.git"
+  },
+  "author": "Ehtisham",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.18.0",
+    "@aws-sdk/util-dynamodb": "^3.18.0"
+  },
+  "bugs": {
+    "url": "https://github.com/ehtisham6699/order_mgt_system/issues"
+  },
+  "homepage": "https://github.com/ehtisham6699/order_mgt_system#readme"
+}

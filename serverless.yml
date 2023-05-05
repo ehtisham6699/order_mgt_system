@@ -1,0 +1,103 @@
+service: order_mgt_system
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: dev
+  region: us-east-1
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.ordersTableName}
+
+custom:
+  ordersTableName: orders-table-${self:provider.stage}
+
+plugins:
+  - serverless-iam-roles-per-function
+
+functions:
+  getPost:
+    handler: api.getOrder
+    name: get-post
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: orders/{id}
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:GetItem"
+        Resource: !GetAtt ordersTable.Arn
+  createPost:
+    handler: api.createOrder
+    name: create-order
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: orders
+          method: POST
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:PutItem"
+        Resource: !GetAtt ordersTable.Arn
+  updatePost:
+    handler: api.updateOrder
+    name: update-order
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: order/{id}
+          method: PUT
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:UpdateItem"
+        Resource: !GetAtt ordersTable.Arn
+  deletePost:
+    handler: api.deletePost
+    name: delete-post
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: post/{postId}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:DeleteItem"
+        Resource: !GetAtt ordersTable.Arn
+  getAllorders:
+    handler: api.getAllorders
+    name: get-all-orders
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: orders
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:Scan"
+        Resource: !GetAtt ordersTable.Arn
+
+resources:
+  Resources:
+    ordersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.ordersTableName}
+        AttributeDefinitions:
+          - AttributeName: _id
+            AttributeType: N
+        KeySchema:
+          - AttributeName: _id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
