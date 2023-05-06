@@ -6,7 +6,7 @@ provider:
   stage: dev
   region: us-east-1
 environment:
-  DB_URI: ${{ secrets.DB_URI }}
+  MONGODB_URI: ${{ secrets.DB_URI }}
 functions:
   createOrder:
     handler: index.createOrder
