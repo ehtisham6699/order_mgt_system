@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 let conn = null;
 
-const uri =
-  "mongodb+srv://ehtisham:Fb37db99@test.9yehdag.mongodb.net/?retryWrites=true&w=majority";
+const uri = secrets.DB_URI;
 const connectDB = async () => {
   try {
     await mongoose.connect(uri, {

@@ -16,3 +16,12 @@ functions:
       - http:
           path: orders
           method: POST
+  fetchAllOrders:
+    handler: index.getCustomerOrder
+    name: fetch-all-orders
+    memorySize: 128 # mb
+    timeout: 50 # seconds
+    events:
+      - http:
+          path: orders
+          method: GET
