@@ -15,9 +15,9 @@ plugins:
   - serverless-iam-roles-per-function
 
 functions:
-  getPost:
+  getOrder:
     handler: api.getOrder
-    name: get-post
+    name: get-order
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
@@ -29,7 +29,7 @@ functions:
         Action:
           - "dynamodb:GetItem"
         Resource: !GetAtt ordersTable.Arn
-  createPost:
+  createOrder:
     handler: api.createOrder
     name: create-order
     memorySize: 128 # mb
@@ -37,34 +37,34 @@ functions:
     events:
       - http:
           path: orders
-          method: POST
+          method: Order
     iamRoleStatements:
       - Effect: "Allow"
         Action:
           - "dynamodb:PutItem"
         Resource: !GetAtt ordersTable.Arn
-  updatePost:
+  updateOrder:
     handler: api.updateOrder
     name: update-order
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
       - http:
-          path: order/{id}
+          path: orders/{id}
           method: PUT
     iamRoleStatements:
       - Effect: "Allow"
         Action:
           - "dynamodb:UpdateItem"
         Resource: !GetAtt ordersTable.Arn
-  deletePost:
-    handler: api.deletePost
-    name: delete-post
+  deleteOrder:
+    handler: api.deleteOrder
+    name: delete-order
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
       - http:
-          path: post/{postId}
+          path: orders/{id}
           method: DELETE
     iamRoleStatements:
       - Effect: "Allow"
