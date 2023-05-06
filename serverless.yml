@@ -9,7 +9,7 @@ provider:
 functions:
   createOrder:
     handler: index.createOrder
-    name: create-order
+    name: create-new-order
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
