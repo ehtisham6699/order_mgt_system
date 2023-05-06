@@ -1,4 +1,4 @@
-service: order-app
+service: order-application
 
 provider:
   name: aws
