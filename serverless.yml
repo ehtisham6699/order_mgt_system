@@ -37,7 +37,7 @@ functions:
     events:
       - http:
           path: orders
-          method: Order
+          method: POST
     iamRoleStatements:
       - Effect: "Allow"
         Action:
