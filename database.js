@@ -4,9 +4,6 @@ let conn = null;
 
 const uri =
   "mongodb+srv://ehtisham:Fb37db99@test.9yehdag.mongodb.net/?retryWrites=true&w=majority";
-
-const mongoose = require("mongoose");
-
 const connectDB = async () => {
   try {
     await mongoose.connect(uri, {

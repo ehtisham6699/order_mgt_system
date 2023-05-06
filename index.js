@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const Order = require("./OrderSchema");
 const connectDB = require("./database");
 exports.createOrder = async (event, context) => {
