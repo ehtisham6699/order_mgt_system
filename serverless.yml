@@ -6,9 +6,6 @@ provider:
   stage: dev
   region: us-east-1
 
-plugins:
-  - serverless-iam-roles-per-function
-
 functions:
   createOrder:
     handler: index.createOrder
@@ -19,5 +16,3 @@ functions:
       - http:
           path: orders
           method: POST
-    iamRoleStatements:
-      - Effect: "Allow"
