@@ -72,7 +72,7 @@ functions:
           - "dynamodb:DeleteItem"
         Resource: !GetAtt ordersTable.Arn
   getAllorders:
-    handler: api.getAllorders
+    handler: api.getAllOrders
     name: get-all-orders
     memorySize: 128 # mb
     timeout: 5 # seconds
