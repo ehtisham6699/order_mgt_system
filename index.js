@@ -2,6 +2,7 @@ const Order = require("./OrderSchema");
 const connectDB = require("./database");
 exports.createOrder = async (event, context) => {
   try {
+    await connectDB();
     const requestBody = JSON.parse(event.body);
 
     const newOrder = await Order.create(requestBody);
@@ -16,7 +17,7 @@ exports.createOrder = async (event, context) => {
     // Return an error response
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: "Error creating Order" }),
+      body: err,
     };
   }
 };
