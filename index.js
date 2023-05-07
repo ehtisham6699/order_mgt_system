@@ -17,7 +17,9 @@ exports.createOrder = async (event, context) => {
     // Extract customer id and products array from request body
 
     const processOrderMessage = {
-      event,
+      products: event.products,
+      customer: event.customer,
+      address: event.address,
     };
     let msg = await sqs
       .sendMessage({
@@ -42,7 +44,8 @@ exports.createOrder = async (event, context) => {
 // Function to process an order
 exports.processOrder = async (event) => {
   // Loop through the products in the order
-  console.log("AAAAAAAAA", JSON.parse(event));
+  console.log("AAAAAAAAA", event);
+  console.log("BBBBB", event.Records[0]);
   const processOrderMessage = JSON.parse(event.Records[0].body);
   const { customer, products, address } = processOrderMessage;
   const newOrder = await new Order({
