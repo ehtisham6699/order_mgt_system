@@ -69,6 +69,8 @@ functions:
     events:
       - sqs:
           arn: arn:aws:sqs:us-east-1:960964000470:order-msg
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:960964000470:product-msg
 
   updateProductInfo:
     handler: index.updateProductInfo
