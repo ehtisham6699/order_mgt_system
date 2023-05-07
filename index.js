@@ -88,7 +88,6 @@ exports.updateProductInfo = async (event, context) => {
         await Product.findByIdAndUpdate(
           productId,
           {
-            $inc: { quantity: -1 },
             $set: { soldOut: true },
           },
           { new: true }
