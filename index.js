@@ -54,13 +54,7 @@ exports.processOrder = async (event) => {
   );
   console.log(processOrderMessage);
   const { customer, products, address } = processOrderMessage;
-  const newOrder = await new Order({
-    customer: customer,
-    products: products.map((id) => {
-      new mongoose.Types.ObjectId(id);
-    }),
-    address: address,
-  }).save();
+  const newOrder = Order.create(processOrderMessage);
   console.log(newOrder);
   // Process the order and update product info
   const updateProductInfoMessage = newOrder;
