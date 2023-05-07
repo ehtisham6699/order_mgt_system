@@ -45,13 +45,15 @@ exports.createOrder = async (event, context) => {
 exports.processOrder = async (event) => {
   // Loop through the products in the order
   console.log("AAAAAAAAA", event);
-  console.log("BBBBB", event.Records[0].body.body);
-  const processOrderMessage = JSON.parse(event.Records[0].body.body);
+  console.log("BBBBB", event.Records[0].body);
+  const processOrderMessage = JSON.parse(event.Records[0].body);
   console.log(processOrderMessage);
   const { customer, products, address } = processOrderMessage;
   const newOrder = await new Order({
     customer: customer,
-    products: products.map((productId) => ({ product: productId })),
+    products: productIds.map((id) => {
+      return { product: mongoose.Types.ObjectId(id) };
+    }),
     address: address,
   }).save();
   console.log(newOrder);
