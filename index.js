@@ -3,16 +3,19 @@ const Product = require("./Models/ProductSchema");
 const User = require("./Models/UserSchema");
 const connectDB = require("./database");
 exports.createOrder = async (event, context) => {
+  console.log("Request :", event);
+  console.log("Request :", event.body);
   try {
     await connectDB();
 
     // Extract customer id and products array from request body
-    const { customer, products } = JSON.parse(event.body);
+    const { customer, products, address } = JSON.parse(event.body);
 
     // Create a new order object
     const newOrder = new Order({
       customer: customer,
       products: products.map((productId) => ({ product: productId })),
+      address,
     });
 
     // Save the new order
