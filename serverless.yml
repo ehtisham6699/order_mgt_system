@@ -9,6 +9,7 @@ environment:
   AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_SECRET_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ env.AWS_ACCESS_SECRET_KEY }}
   DB_URI: ${{ env.DB_URI }}
+  SQS_QUEUE_URL: ${{ env.SQS_QUEUE_URL }}
 functions:
   addUser:
     handler: index.createUser
@@ -29,6 +30,7 @@ functions:
     timeout: 50 # seconds
     environment:
       DB_URI: ${env:DB_URI}
+      SQS_QUEUE_URL: ${env:SQS_QUEUE_URL}
     events:
       - http:
           path: orders
@@ -45,3 +47,10 @@ functions:
       - http:
           path: orders/{_id}
           method: GET
+
+  resources:
+    Resources:
+      MyQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+          QueueName: order-msg

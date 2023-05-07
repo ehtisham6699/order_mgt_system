@@ -2,6 +2,8 @@ const Order = require("./Models/OrderSchema");
 const Product = require("./Models/ProductSchema");
 const User = require("./Models/UserSchema");
 const connectDB = require("./database");
+const sqs = new AWS.SQS({ region: "us-east-1" });
+
 exports.createOrder = async (event, context) => {
   console.log(event);
   try {
@@ -10,19 +12,20 @@ exports.createOrder = async (event, context) => {
     // Extract customer id and products array from request body
     const { customer, products, address } = JSON.parse(event);
 
-    // Create a new order object
-    const newOrder = await new Order({
-      customer: customer,
-      products: products.map((productId) => ({ product: productId })),
-      address: address,
-    }).save();
-    console.log(newOrder);
-    // Process the order and update product info
-    await processOrder(newOrder);
-
+    const processOrderMessage = {
+      customer,
+      products,
+      address,
+    };
+    await sqs
+      .sendMessage({
+        QueueUrl: processOrderQueueUrl,
+        MessageBody: JSON.stringify(processOrderMessage),
+      })
+      .promise();
     return {
       statusCode: 200,
-      body: JSON.stringify(newOrder),
+      body: JSON.stringify({ message: "Order created successfully" }),
     };
   } catch (err) {
     console.error("Error creating order:", err);
@@ -33,25 +36,54 @@ exports.createOrder = async (event, context) => {
   }
 };
 
-// Function to process an order and update product info
-async function processOrder(order) {
+// Function to process an order
+exports.processOrder = async (event) => {
   // Loop through the products in the order
-  if (order.products.length > 0) {
-    for (let i = 0; i < order.products.length; i++) {
-      const productId = order.products[i].product;
+  const processOrderMessage = JSON.parse(event.Records[0].body);
+  const { customer, products, address } = processOrderMessage;
+  const newOrder = await new Order({
+    customer: customer,
+    products: products.map((productId) => ({ product: productId })),
+    address: address,
+  }).save();
+  console.log(newOrder);
+  // Process the order and update product info
+  const updateProductInfoMessage = newOrder;
 
-      // Update the product quantity and sold out flag
-      await Product.findByIdAndUpdate(
-        productId,
-        {
-          $inc: { quantity: -1 },
-          $set: { soldOut: true },
-        },
-        { new: true }
-      );
+  await sqs
+    .sendMessage({
+      QueueUrl: process.env.SQS_QUEUE_URL,
+      MessageBody: JSON.stringify(updateProductInfoMessage),
+    })
+    .promise();
+};
+
+exports.updateProductInfo = async (event, context) => {
+  try {
+    const updateProductInfoMessage = JSON.parse(event.Records[0].body);
+    const { newOrder } = updateProductInfoMessage;
+
+    // Update the product information
+    if (newOrder.products.length > 0) {
+      for (let i = 0; i < newOrder.products.length; i++) {
+        const productId = newOrder.products[i].product;
+        // Update the product quantity and sold out flag
+        await Product.findByIdAndUpdate(
+          productId,
+          {
+            $inc: { quantity: -1 },
+            $set: { soldOut: true },
+          },
+          { new: true }
+        );
+      }
     }
+  } catch (error) {
+    // Handle errors
+    console.error(error);
   }
-}
+};
+
 exports.getCustomerOrder = async (event, context) => {
   console.log(event);
   try {
