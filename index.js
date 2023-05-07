@@ -44,6 +44,7 @@ exports.createOrder = async (event, context) => {
 
 // Function to process an order
 exports.processOrder = async (event) => {
+  await connectDB();
   // Loop through the products in the order
   console.log("AAAAAAAAA", event);
   console.log("BBBBB", event.Records[0].body);
@@ -76,6 +77,7 @@ exports.processOrder = async (event) => {
 
 exports.updateProductInfo = async (event, context) => {
   try {
+    await connectDB();
     const updateProductInfoMessage = JSON.parse(event.Records[0].body);
     const { newOrder } = updateProductInfoMessage;
 
