@@ -48,11 +48,11 @@ async function processOrder(order) {
 exports.getCustomerOrder = async (event, context) => {
   try {
     await connectDB();
-    const request = JSON.parse(event.body._id);
+    const request = JSON.parse(event);
     console.log(request);
     console.log(event.body);
     // find all orders for a specific user
-    await Order.find({ customer: request }, function (err, orders) {
+    await Order.find({ customer: request._id }, function (err, orders) {
       if (err) {
         console.error(err);
         return;
