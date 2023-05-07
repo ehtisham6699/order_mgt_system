@@ -55,11 +55,13 @@ exports.processOrder = async (event) => {
   console.log(
     processOrderMessage.event ? processOrderMessage.event : processOrderMessage
   );
-  const { customer, products, address } = processOrderMessage.event
+  const data = processOrderMessage.event
     ? processOrderMessage.event
     : processOrderMessage;
   const options = { timeout: 30000 };
-  const newOrder = await Order.create(processOrderMessage, options);
+  const newOrder = new Order(data);
+
+  const result = await newOrder.save({ maxTimeMS: 30000 });
   console.log(newOrder);
   // Process the order and update product info
   const updateProductInfoMessage = newOrder;
