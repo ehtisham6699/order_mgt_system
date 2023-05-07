@@ -33,6 +33,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Step 1 - Echo out a GitHub Actions Secret to the logs
+      run:
+      echo ${{ secrets.SERVERLESS_ACCESS_ID  }}
+
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
