@@ -1,4 +1,6 @@
 const Order = require("./Models/OrderSchema");
+const Product = require("./Models/ProductSchema");
+const User = require("./Models/UserSchema");
 const connectDB = require("./database");
 exports.createOrder = async (event, context) => {
   try {
@@ -23,7 +25,7 @@ async function processOrder(order) {
   try {
     await connectDB();
     if (order.products.length > 0) {
-      let modifiedProducts = await Product.updateMany(
+      await Product.updateMany(
         { _id: { $in: order.products } },
         { soldOut: true },
         (err, res) => {
@@ -33,12 +35,8 @@ async function processOrder(order) {
             console.log(`${res.nModified} products updated`);
           }
         }
-      );
+      ).exec();
     }
-    return {
-      statusCode: 200,
-      body: JSON.stringify(modifiedProducts),
-    };
   } catch (err) {
     console.error("Error processing Order:", err);
     return {
@@ -67,6 +65,24 @@ exports.getCustomerOrder = async (event, context) => {
     };
   } catch (err) {
     console.error("Error fetching  all orders:", err);
+    return {
+      statusCode: 500,
+      body: err,
+    };
+  }
+};
+exports.createUser = async (event, context) => {
+  try {
+    await connectDB();
+    const requestBody = JSON.parse(event.body);
+
+    const newUser = await User.create(requestBody);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(newUser),
+    };
+  } catch (err) {
+    console.error("Error creating User:", err);
     return {
       statusCode: 500,
       body: err,

@@ -26,3 +26,12 @@ functions:
       - http:
           path: orders
           method: GET
+ createUser:
+    handler: index.createUser
+    name: create-User
+    memorySize: 128 # mb
+    timeout: 50 # seconds
+    events:
+      - http:
+          path: users
+          method: POST
