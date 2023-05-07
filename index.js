@@ -46,30 +46,22 @@ async function processOrder(order) {
   }
 }
 exports.getCustomerOrder = async (event, context) => {
+  console.log(event);
   try {
     await connectDB();
-    const request = JSON.parse(event);
-    console.log(request);
-    console.log(event.body);
     // find all orders for a specific user
-    await Order.find({ customer: request._id }, function (err, orders) {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      console.log("Orders:", orders);
-      return {
-        statusCode: 200,
-        body: orders,
-      };
-    });
+    const orders = await Order.find({ customer: event._id });
+    console.log("Orders:", orders);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(orders),
+    };
   } catch (err) {
     console.error("Error fetching  all orders:", err);
-    console.error("bodyyy:", event);
+    console.error("bodyyy:", JSON.parse(event));
     return {
       statusCode: 500,
-      body: err,
+      body: JSON.stringify(err),
     };
   }
 };
