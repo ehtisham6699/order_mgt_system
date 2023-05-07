@@ -2,9 +2,11 @@ const Order = require("./Models/OrderSchema");
 const Product = require("./Models/ProductSchema");
 const User = require("./Models/UserSchema");
 const connectDB = require("./database");
+const AWS = require("aws-sdk");
 const sqs = new AWS.SQS({ region: "us-east-1" });
 const OrderQueueUrl =
   "https://sqs.us-east-1.amazonaws.com/960964000470/order-msg";
+
 exports.createOrder = async (event, context) => {
   console.log(event);
   try {
