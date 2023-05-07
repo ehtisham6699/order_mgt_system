@@ -3,6 +3,7 @@ const Product = require("./Models/ProductSchema");
 const User = require("./Models/UserSchema");
 const connectDB = require("./database");
 exports.createOrder = async (event, context) => {
+  console.log(event);
   try {
     await connectDB();
 
@@ -10,15 +11,12 @@ exports.createOrder = async (event, context) => {
     const { customer, products, address } = JSON.parse(event);
 
     // Create a new order object
-    const newOrder = new Order({
+    const newOrder = await new Order({
       customer: customer,
       products: products.map((productId) => ({ product: productId })),
-      address,
-    });
-
-    // Save the new order
-    await newOrder.save();
-
+      address: address,
+    }).save();
+    console.log(newOrder);
     // Process the order and update product info
     await processOrder(newOrder);
 
@@ -38,18 +36,20 @@ exports.createOrder = async (event, context) => {
 // Function to process an order and update product info
 async function processOrder(order) {
   // Loop through the products in the order
-  for (let i = 0; i < order.products.length; i++) {
-    const productId = order.products[i].product;
+  if (order.products.length > 0) {
+    for (let i = 0; i < order.products.length; i++) {
+      const productId = order.products[i].product;
 
-    // Update the product quantity and sold out flag
-    await Product.findByIdAndUpdate(
-      productId,
-      {
-        $inc: { quantity: -1 },
-        $set: { soldOut: true },
-      },
-      { new: true }
-    );
+      // Update the product quantity and sold out flag
+      await Product.findByIdAndUpdate(
+        productId,
+        {
+          $inc: { quantity: -1 },
+          $set: { soldOut: true },
+        },
+        { new: true }
+      );
+    }
   }
 }
 exports.getCustomerOrder = async (event, context) => {
