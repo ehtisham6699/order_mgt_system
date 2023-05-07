@@ -35,5 +35,5 @@ functions:
     timeout: 50 # seconds
     events:
       - http:
-          path: orders
+          path: orders/{_id}
           method: GET

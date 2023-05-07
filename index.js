@@ -50,7 +50,7 @@ exports.getCustomerOrder = async (event, context) => {
   try {
     await connectDB();
     // find all orders for a specific user
-    const orders = await Order.find({ customer: event._id });
+    const orders = await Order.find({ customer: event.pathParameters._id });
     console.log("Orders:", orders);
     return {
       statusCode: 200,
