@@ -42,6 +42,7 @@ exports.createOrder = async (event, context) => {
 // Function to process an order
 exports.processOrder = async (event) => {
   // Loop through the products in the order
+  console.log("AAAAAAAAA", event);
   const processOrderMessage = JSON.parse(event.Records[0].body);
   const { customer, products, address } = processOrderMessage;
   const newOrder = await new Order({
