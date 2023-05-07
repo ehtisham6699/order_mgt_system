@@ -6,6 +6,8 @@ const AWS = require("aws-sdk");
 const sqs = new AWS.SQS({ region: "us-east-1" });
 const OrderQueueUrl =
   "https://sqs.us-east-1.amazonaws.com/960964000470/order-msg";
+const productQueueUrl =
+  "https://sqs.us-east-1.amazonaws.com/960964000470/product-msg";
 
 exports.createOrder = async (event, context) => {
   console.log(event);
@@ -20,12 +22,13 @@ exports.createOrder = async (event, context) => {
       products,
       address,
     };
-    await sqs
+    let msg = await sqs
       .sendMessage({
         QueueUrl: OrderQueueUrl,
         MessageBody: JSON.stringify(processOrderMessage),
       })
       .promise();
+    console.log(msg);
     return {
       statusCode: 200,
       body: JSON.stringify({ message: "Order created successfully" }),
@@ -55,7 +58,7 @@ exports.processOrder = async (event) => {
 
   await sqs
     .sendMessage({
-      QueueUrl: OrderQueueUrl,
+      QueueUrl: productQueueUrl,
       MessageBody: JSON.stringify(updateProductInfoMessage),
     })
     .promise();

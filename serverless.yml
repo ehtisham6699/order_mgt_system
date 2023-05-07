@@ -10,6 +10,15 @@ environment:
   AWS_SECRET_ACCESS_KEY: ${{ env.AWS_ACCESS_SECRET_KEY }}
   DB_URI: ${{ env.DB_URI }}
   # SQS_QUEUE_URL: ${{ env.SQS_QUEUE_URL }}
+
+iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - sqs:SendMessage
+      - sqs:ReceiveMessage
+      - sqs:DeleteMessage
+    Resource: arn:aws:sqs:us-east-1:960964000470:order-msg
+
 functions:
   addUser:
     handler: index.createUser
@@ -48,6 +57,23 @@ functions:
           path: orders/{_id}
           method: GET
 
+  processOrder:
+    handler: index.processOrder
+    name: process-order
+    memorySize: 128 # mb
+    timeout: 50 # seconds
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:960964000470:order-msg
+
+  updateProductInfo:
+    handler: index.updateProductInfo
+    name: update-product-info
+    memorySize: 128 # mb
+    timeout: 50 # seconds
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:960964000470:product-msg
   # resources:
   #   Resources:
   #     MyQueue:
