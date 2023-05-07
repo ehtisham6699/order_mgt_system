@@ -59,7 +59,6 @@ exports.processOrder = async (event) => {
   const data = processOrderMessage.event
     ? processOrderMessage.event
     : processOrderMessage;
-  const options = { timeout: 30000 };
   const newOrder = new Order(data);
 
   const result = await newOrder.save({ maxTimeMS: 30000 });
@@ -79,7 +78,8 @@ exports.updateProductInfo = async (event, context) => {
   try {
     await connectDB();
     const updateProductInfoMessage = JSON.parse(event.Records[0].body);
-    const { newOrder } = updateProductInfoMessage;
+    console.log(updateProductInfoMessage);
+    const newOrder = updateProductInfoMessage;
 
     // Update the product information
     if (newOrder.products.length > 0) {
