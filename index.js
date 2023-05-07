@@ -66,6 +66,7 @@ exports.getCustomerOrder = async (event, context) => {
     });
   } catch (err) {
     console.error("Error fetching  all orders:", err);
+    console.error("bodyyy:", event.body);
     return {
       statusCode: 500,
       body: err,
