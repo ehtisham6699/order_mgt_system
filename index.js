@@ -15,12 +15,10 @@ exports.createOrder = async (event, context) => {
     await connectDB();
 
     // Extract customer id and products array from request body
-    const { customer, products, address } = JSON.parse(event);
+    const body = JSON.parse(event);
 
     const processOrderMessage = {
-      customer,
-      products,
-      address,
+      body,
     };
     let msg = await sqs
       .sendMessage({
