@@ -47,9 +47,9 @@ exports.processOrder = async (event) => {
   // Loop through the products in the order
   console.log("AAAAAAAAA", event);
   console.log("BBBBB", event.Records[0].body);
-  const processOrderMessage = event.Records[0].body.event;
+  const processOrderMessage = JSON.parse(event.Records[0].body);
   console.log(processOrderMessage);
-  const { customer, products, address } = processOrderMessage;
+  const { customer, products, address } = processOrderMessage.event;
   const newOrder = await new Order({
     customer: customer,
     products: products.map((id) => {
