@@ -8,15 +8,16 @@ provider:
 # environment:
 #   DB_URI: ${{ secrets.DB_URI }}
 functions:
- addUser:
+  addUser:
     handler: index.createUser
-    name: create-User
+    name: create-user
     memorySize: 128 # mb
-    timeout: 50 # seconds
+    timeout: 5 # seconds
     events:
       - http:
-          path: users
+          path: user
           method: POST
+
   createOrder:
     handler: index.createOrder
     name: create-new-order
@@ -26,6 +27,7 @@ functions:
       - http:
           path: orders
           method: POST
+
   fetchAllOrders:
     handler: index.getCustomerOrder
     name: fetch-all-orders
