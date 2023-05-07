@@ -51,7 +51,7 @@ exports.processOrder = async (event) => {
   const { customer, products, address } = processOrderMessage;
   const newOrder = await new Order({
     customer: customer,
-    products: productIds.map((id) => {
+    products: products.map((id) => {
       return { product: mongoose.Types.ObjectId(id) };
     }),
     address: address,
