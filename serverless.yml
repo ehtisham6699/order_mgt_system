@@ -5,8 +5,8 @@ provider:
   runtime: nodejs16.x
   stage: dev
   region: us-east-1
-# environment:
-#   DB_URI: ${{ secrets.DB_URI }}
+environment:
+  DB_URI: ${{ secrets.DB_URI }}
 functions:
   addUser:
     handler: index.createUser
