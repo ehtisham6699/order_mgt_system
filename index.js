@@ -78,14 +78,13 @@ exports.updateProductInfo = async (event, context) => {
   try {
     await connectDB();
     const updateProductInfoMessage = JSON.parse(event.Records[0].body);
-    console.log(updateProductInfoMessage);
+    console.log(updateProductInfoMessage.products.length);
     const newOrder = updateProductInfoMessage;
 
     // Update the product information
     if (newOrder.products.length > 0) {
       for (let i = 0; i < newOrder.products.length; i++) {
-        const productId = newOrder.products[i].product;
-        // Update the product quantity and sold out flag
+        const productId = newOrder.products[i];
         await Product.findByIdAndUpdate(
           productId,
           {

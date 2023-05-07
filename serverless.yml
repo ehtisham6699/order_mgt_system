@@ -56,7 +56,7 @@ functions:
       DB_URI: ${env:DB_URI}
     events:
       - http:
-          path: orders/{_id}
+          path: user/{_id}
           method: GET
 
   processOrder:
