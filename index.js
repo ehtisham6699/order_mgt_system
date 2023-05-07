@@ -51,7 +51,7 @@ exports.getCustomerOrder = async (event, context) => {
     const request = JSON.parse(event.body);
 
     // find all orders for a specific user
-    let allOrders = await find({ customer: request._id }, (err, docs) => {
+    let allOrders = await Order.find({ customer: request._id }, (err, docs) => {
       if (err) {
         console.log(err);
       } else {
