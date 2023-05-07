@@ -14,7 +14,7 @@ functions:
     handler: index.createUser
     name: create-user
     memorySize: 128 # mb
-    timeout: 5 # seconds
+    timeout: 50 # seconds
     events:
       - http:
           path: user
