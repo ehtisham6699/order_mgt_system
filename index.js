@@ -48,21 +48,21 @@ async function processOrder(order) {
 exports.getCustomerOrder = async (event, context) => {
   try {
     await connectDB();
-    const request = JSON.parse(event.body);
+    const request = JSON.parse(event.body._id);
 
     // find all orders for a specific user
-    let allOrders = await Order.find({ customer: request._id }, (err, docs) => {
+    await Order.find({ customer: request }, function (err, orders) {
       if (err) {
-        console.log(err);
-      } else {
-        console.log(docs);
+        console.error(err);
+        return;
       }
-    });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(allOrders),
-    };
+      console.log("Orders:", orders);
+      return {
+        statusCode: 200,
+        body: orders,
+      };
+    });
   } catch (err) {
     console.error("Error fetching  all orders:", err);
     return {
