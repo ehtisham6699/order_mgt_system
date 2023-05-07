@@ -62,6 +62,8 @@ functions:
     name: process-order
     memorySize: 128 # mb
     timeout: 20 # seconds
+    environment:
+      DB_URI: ${env:DB_URI}
     events:
       - sqs:
           arn: arn:aws:sqs:us-east-1:960964000470:order-msg
@@ -71,6 +73,8 @@ functions:
     name: update-product-info
     memorySize: 128 # mb
     timeout: 20 # seconds
+    environment:
+      DB_URI: ${env:DB_URI}
     events:
       - sqs:
           arn: arn:aws:sqs:us-east-1:960964000470:product-msg
