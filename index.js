@@ -3,7 +3,8 @@ const Product = require("./Models/ProductSchema");
 const User = require("./Models/UserSchema");
 const connectDB = require("./database");
 const sqs = new AWS.SQS({ region: "us-east-1" });
-
+const OrderQueueUrl =
+  "https://sqs.us-east-1.amazonaws.com/960964000470/order-msg";
 exports.createOrder = async (event, context) => {
   console.log(event);
   try {
@@ -19,7 +20,7 @@ exports.createOrder = async (event, context) => {
     };
     await sqs
       .sendMessage({
-        QueueUrl: processOrderQueueUrl,
+        QueueUrl: OrderQueueUrl,
         MessageBody: JSON.stringify(processOrderMessage),
       })
       .promise();
@@ -52,7 +53,7 @@ exports.processOrder = async (event) => {
 
   await sqs
     .sendMessage({
-      QueueUrl: process.env.SQS_QUEUE_URL,
+      QueueUrl: OrderQueueUrl,
       MessageBody: JSON.stringify(updateProductInfoMessage),
     })
     .promise();
