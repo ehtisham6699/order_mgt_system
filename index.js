@@ -52,9 +52,14 @@ exports.processOrder = async (event) => {
       ? event.Records[0].body.event
       : event.Records[0].body
   );
-  console.log(processOrderMessage);
-  const { customer, products, address } = processOrderMessage;
-  const newOrder = await Order.create(processOrderMessage);
+  console.log(
+    processOrderMessage.event ? processOrderMessage.event : processOrderMessage
+  );
+  const { customer, products, address } = processOrderMessage.event
+    ? processOrderMessage.event
+    : processOrderMessage;
+  const options = { timeout: 30000 };
+  const newOrder = await Order.create(processOrderMessage, options);
   console.log(newOrder);
   // Process the order and update product info
   const updateProductInfoMessage = newOrder;
