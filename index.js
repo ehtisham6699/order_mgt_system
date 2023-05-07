@@ -54,7 +54,7 @@ exports.processOrder = async (event) => {
   );
   console.log(processOrderMessage);
   const { customer, products, address } = processOrderMessage;
-  const newOrder = Order.create(processOrderMessage);
+  const newOrder = await Order.create(processOrderMessage);
   console.log(newOrder);
   // Process the order and update product info
   const updateProductInfoMessage = newOrder;
